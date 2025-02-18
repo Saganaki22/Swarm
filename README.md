@@ -1,11 +1,13 @@
 # 🦟 Swarm by DrBaph
 
-An interactive pointer swarm simulation where a mesmerizing group of pointers follow your cursor, creating dynamic and chaotic patterns.
+An interactive pointer swarm simulation where a mesmerizing group of pointers follows your cursor, creating dynamic and chaotic patterns.
 
 ## 🎮 Features
 
 - **Interactive Swarm Behavior**: Watch as particles dynamically follow your cursor
-- **Food Placement**: Click anywhere to drop food and attract the swarm
+- **Responsive Design**: Seamless experience across all devices and screen sizes
+- **Mobile Support**: Touch-friendly controls with dedicated reset button for mobile users
+- **Food Placement**: Click or tap anywhere to drop food and attract the swarm
 - **Death Animation**: Press spacebar to trigger a dramatic falling animation
 - **Reset Function**: Press 'R' to reset the simulation
 - **Customizable Settings**: Adjust particle count, speed, and behavior through the control panel
