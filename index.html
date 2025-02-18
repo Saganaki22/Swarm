@@ -491,6 +491,22 @@
             hideable: true
         });
         
+        // Update close button text based on GUI state
+        const updateCloseButtonText = () => {
+            const closeButton = gui.domElement.querySelector('.close-button');
+            if (closeButton) {
+                closeButton.innerHTML = gui.closed ? 'Open Controls' : 'Close Controls';
+            }
+        };
+
+        // Handle GUI open/close events
+        gui.domElement.addEventListener('click', (e) => {
+            if (e.target.classList.contains('close-button')) {
+                // Wait for GUI state to update
+                setTimeout(updateCloseButtonText, 0);
+            }
+        });
+        
         // Mobile options button setup
         const mobileOptionsBtn = document.getElementById('mobile-options-btn');
         
@@ -506,6 +522,7 @@
                 gui.domElement.style.display = '';
                 gui.open();
                 mobileOptionsBtn.style.display = 'none';
+                updateCloseButtonText();
             });
             
             // Handle GUI close button click
@@ -515,10 +532,14 @@
                 setTimeout(() => {
                     gui.domElement.style.display = 'none';
                     mobileOptionsBtn.style.display = 'block';
+                    updateCloseButtonText();
                 }, 300); // Wait for transition
             });
         }
-        
+
+        // Initial text update
+        updateCloseButtonText();
+
         // Create folders for better organization
         const swarmFolder = gui.addFolder('Swarm Settings');
         const behaviorFolder = gui.addFolder('Behavior Settings');
