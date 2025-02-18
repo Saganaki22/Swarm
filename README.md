@@ -2,6 +2,9 @@
 
 An interactive pointer swarm simulation where a mesmerizing group of pointers follows your cursor, creating dynamic and chaotic patterns.
 
+![social1](https://github.com/user-attachments/assets/6f83f060-9731-4594-a972-c8ec2e1524bc)
+
+
 ## 🎮 Features
 
 - **Interactive Swarm Behavior**: Watch as particles dynamically follow your cursor
