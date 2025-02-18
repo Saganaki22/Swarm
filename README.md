@@ -8,10 +8,10 @@ An interactive pointer swarm simulation where a mesmerizing group of pointers fo
 ## 🎮 Features
 
 - **Interactive Swarm Behavior**: Watch as particles dynamically follow your cursor
-- **Responsive Design**: Seamless experience across all devices and screen sizes
-- **Mobile Support**: Touch-friendly controls with dedicated reset button for mobile users
+- **Responsive Design**: Experience across all devices and screen sizes
+- **Mobile Support**: Touch-friendly controls 
 - **Food Placement**: Click or tap anywhere to drop food and attract the swarm
-- **Death Animation**: Press spacebar to trigger a dramatic falling animation
+- **Pause Function**: Press spacebar to Pause animation
 - **Reset Function**: Press 'R' to reset the simulation
 - **Customizable Settings**: Adjust particle count, speed, and behavior through the control panel
 - **Inverted Colors**: Toggle between light and dark modes
@@ -24,7 +24,7 @@ Visit [Swarm by DrBaph](https://saganaki22.github.io/Swarm/) to experience the s
 
 - **Mouse Movement**: Guide the swarm
 - **Click**: Drop food
-- **Spacebar**: Kill swarm (with animation)
+- **Spacebar**: Pause 
 - **R Key**: Reset simulation
 - **Control Panel**: Adjust simulation parameters
 
