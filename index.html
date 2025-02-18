@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Swarm by DrBaph - Interactive Pointer Swarm Game</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Play Swarm by DrBaph, an interactive game where a swarm of pointers follows your every move. Drop food, tweak settings, and watch the chaos unfold!">
+    <meta name="keywords" content="Swarm game, interactive pointer game, pointer swarm, online physics game, cursor swarm, mouse followers, Swarm by DrBaph">
+    <meta name="author" content="DrBaph">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Swarm by DrBaph - Interactive Pointer Swarm Game">
+    <meta property="og:description" content="A swarm of pointers follows your every move. Drop food, tweak settings, and enjoy the chaos!">
+    <meta property="og:image" content="https://i.ibb.co/whWznrYP/social1.jpg">
+    <meta property="og:url" content="https://saganaki22.github.io/Swarm/">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Swarm by DrBaph">
+    <meta name="twitter:description" content="An interactive pointer swarm game where chaos follows you!">
+    <meta name="twitter:image" content="https://i.ibb.co/whWznrYP/social1.jpg">
+    
+    <!-- Favicon and Canonical -->
+    <link rel="icon" type="image/png" href="https://saganaki22.github.io/Swarm/favicon.png">
+    <link rel="canonical" href="https://saganaki22.github.io/Swarm/">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&display=swap');
+        
+        body { margin: 0; }
+        canvas { display: block; }
+        #title {
+            position: fixed;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            opacity: 1;
+            pointer-events: none;
+            transition: color 0.3s;
+            width: 90%;
+            max-width: 800px;
+            text-shadow: -2px -2px 0 #000,  
+                         2px -2px 0 #000,
+                        -2px  2px 0 #000,
+                         2px  2px 0 #000,
+                        -3px -3px 1px #000,
+                         3px -3px 1px #000,
+                        -3px  3px 1px #000,
+                         3px  3px 1px #000;
+        }
+        body.inverted #title {
+            color: black;
+            text-shadow: -2px -2px 0 #fff,  
+                         2px -2px 0 #fff,
+                        -2px  2px 0 #fff,
+                         2px  2px 0 #fff,
+                        -3px -3px 1px #fff,
+                         3px -3px 1px #fff,
+                        -3px  3px 1px #fff,
+                         3px  3px 1px #fff;
+        }
+        #main-title {
+            font-size: min(8em, 24vw);
+            font-weight: bold;
+            margin-bottom: 20px;
+            opacity: 1;
+            transition: opacity 1.5s ease-out;
+        }
+        #instructions {
+            display: none;
+        }
+        #console-signature {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            opacity: 0.8;
+            z-index: 1000;
+            transition: color 0.3s, opacity 0.3s, text-shadow 0.3s;
+            user-select: none;
+            white-space: pre-line;
+            line-height: 1.4;
+        }
+        body.inverted #console-signature {
+            color: #000000;
+            opacity: 1;
+            font-weight: 600;
+            text-shadow: -1px -1px 0 #fff,  
+                         1px -1px 0 #fff,
+                        -1px  1px 0 #fff,
+                         1px  1px 0 #fff;
+        }
+        body.inverted #console-signature:hover {
+            color: #004d00;
+            text-shadow: 0 0 12px rgba(0, 100, 0, 0.9),
+                        0 0 20px rgba(0, 100, 0, 0.6),
+                        0 0 30px rgba(0, 100, 0, 0.3),
+                        -1px -1px 0 #fff,  
+                         1px -1px 0 #fff,
+                        -1px  1px 0 #fff,
+                         1px  1px 0 #fff;
+            opacity: 1;
+        }
+        #console-signature span {
+            opacity: 0;
+        }
+        #console-signature span.visible {
+            opacity: 1;
+            transition: opacity 0.01s;
+        }
+        #console-signature::after {
+            content: '_';
+            opacity: 0;
+            animation: none;
+        }
+        #console-signature.typing-done::after {
+            animation: blink 1s step-end infinite;
+            opacity: 1;
+        }
+        @keyframes typeWriter {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        #console-signature:hover {
+            opacity: 1;
+            color: #00ff00;
+            text-shadow: 0 0 12px rgba(0, 255, 0, 0.9),
+                        0 0 20px rgba(0, 255, 0, 0.6),
+                        0 0 30px rgba(0, 255, 0, 0.3);
+        }
+        body.inverted #console-signature:hover {
+            color: #006400;
+            text-shadow: 0 0 12px rgba(0, 255, 0, 0.9),
+                        0 0 20px rgba(0, 255, 0, 0.6),
+                        0 0 30px rgba(0, 255, 0, 0.3);
+        }
+        #github-link, #instagram-link {
+            position: fixed;
+            bottom: 20px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.3s ease, filter 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #github-link {
+            right: 20px;
+        }
+        #instagram-link {
+            right: 62px;
+        }
+        #github-link:hover, #instagram-link:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+        #github-link svg, #instagram-link svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #github-link path, #instagram-link path {
+            transition: fill 0.3s;
+        }
+        body.inverted #github-link path, 
+        body.inverted #instagram-link path {
+            fill: #000000;
+        }
+        .fade-out {
+            opacity: 0 !important;
+        }
+        body.inverted #title {
+            color: black;
+        }
+        @media (max-width: 600px) {
+            .dg.ac {
+                right: 0 !important;
+                margin-right: 0 !important;
+                transform: scale(0.8);
+                transform-origin: top right;
+            }
+            #github-link, #instagram-link {
+                bottom: 10px;
+                width: 24px;
+                height: 24px;
+            }
+            #github-link {
+                right: 10px;
+            }
+            #instagram-link {
+                right: 44px;
+            }
+            #console-signature {
+                bottom: 10px;
+                left: 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="title">
+        <div id="main-title">Swarm</div>
+    </div>
+    <div id="console-signature"></div>
+    <a id="instagram-link" href="https://www.instagram.com/drbaph/" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98 96">
+            <g fill="#ffffff">
+                <path d="M32,6C17.64,6 6,17.64 6,32v32c0,14.36 11.64,26 26,26h32c14.36,0 26,-11.64 26,-26v-32c0,-14.36 -11.64,-26 -26,-26zM74,22c2.2,0 4,1.8 4,4c0,2.2 -1.8,4 -4,4c-2.2,0 -4,-1.8 -4,-4c0,-2.2 1.8,-4 4,-4zM50,28c12.14,0 22,9.86 22,22c0,12.14 -9.86,22 -22,22c-12.14,0 -22,-9.86 -22,-22c0,-12.14 9.86,-22 22,-22zM50,32c-9.92,0 -18,8.08 -18,18c0,9.92 8.08,18 18,18c9.92,0 18,-8.08 18,-18c0,-9.92 -8.08,-18 -18,-18z" transform="scale(0.98)"/>
+            </g>
+        </svg>
+    </a>
+    <a id="github-link" href="https://github.com/Saganaki22/Swarm" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;">
+        <svg viewBox="0 0 98 96" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M48.854 0C21.839 0 0 22 0 49.217c0 21.756 13.993 40.172 33.405 46.69 2.427.49 3.316-1.059 3.316-2.362 0-1.141-.08-5.052-.08-9.127-13.59 2.934-16.42-5.867-16.42-5.867-2.184-5.704-5.42-7.17-5.42-7.17-4.448-3.015.324-3.015.324-3.015 4.934.326 7.523 5.052 7.523 5.052 4.367 7.496 11.404 5.378 14.235 4.074.404-3.178 1.699-5.378 3.074-6.6-10.839-1.141-22.243-5.378-22.243-24.283 0-5.378 1.94-9.778 5.014-13.2-.485-1.222-2.184-6.275.486-13.038 0 0 4.125-1.304 13.426 5.052a46.97 46.97 0 0 1 12.214-1.63c4.125 0 8.33.571 12.213 1.63 9.302-6.356 13.427-5.052 13.427-5.052 2.67 6.763.97 11.816.485 13.038 3.155 3.422 5.015 7.822 5.015 13.2 0 18.905-11.404 23.06-22.324 24.283 1.78 1.548 3.316 4.481 3.316 9.126 0 6.6-.08 11.897-.08 13.526 0 1.304.89 2.853 3.316 2.364 19.412-6.52 33.405-24.935 33.405-46.691C97.707 22 75.788 0 48.854 0z" fill="#ffffff"/>
+        </svg>
+    </a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js"></script>
+    <script>
+        // Configuration
+        const config = {
+            particleCount: 55,
+            speed: 0.1,
+            particleSize: 2.7,
+            attraction: 0.16,
+            avoidanceRadius: 4,
+            avoidanceStrength: 1.5,
+            cohesionStrength: 0.05,
+            randomness: 0.4,
+            mouseAvoidanceRadius: 15,
+            mouseAvoidanceStrength: 2.0,
+            hate: false,
+            invertColors: false,
+            fullscreen: false,
+            killed: false
+        };
+
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 50;
+
+        // Initialize renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Initialize arrays and variables
+        const flies = [];
+        const foodItems = [];
+        const trails = [];
+        let time = 0;
+        let followText = true;
+        let titleConsumed = 0;
+        let titleNearbyFlies = 0;
+        let titlePulseTime = 0;
+        let isKillingFlies = false;
+        const dyingFlies = new Set();
+        let drawingInterval = null;
+        let waveCenter = new THREE.Vector3();
+
+        // Create SVG for fly sprite
+        const svgData = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256" width="50px" height="50px">
+            <g transform="scale(10.66667,10.66667)">
+                <path fill="#ffffff" d="M7,2l12,11.2l-5.8,0.5l3.3,7.3l-2.2,1l-3.2,-7.4l-4.1,3.9v-16.5"></path>
+            </g>
+        </svg>`;
+
+        // Create canvas for texture
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 256;
+        canvas.height = 256;
+
+        // Initialize fly material
+        const flyMaterial = new THREE.SpriteMaterial({
+            map: null,
+            transparent: true,
+            alphaTest: 0.1
+        });
+
+        // Load SVG texture
+        const img = new Image();
+        img.onload = function() {
+            // Draw the SVG to the canvas
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            // Create texture from canvas
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.needsUpdate = true;
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+
+            // Update material with the texture
+            flyMaterial.map = texture;
+            flyMaterial.needsUpdate = true;
+
+            // Create initial flies after texture is loaded
+            createFlies();
+        };
+        img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+
+        // Function to create flies
+        function createFlies() {
+            // Remove existing flies
+            flies.forEach(fly => {
+                scene.remove(fly.sprite);
+                if (fly.sprite.material) fly.sprite.material.dispose();
+            });
+            flies.length = 0;
+
+            // Create new flies
+            for (let i = 0; i < config.particleCount; i++) {
+                const fly = new Fly();
+                flies.push(fly);
+            }
+        }
+
+        // GUI setup
+        const gui = new dat.GUI();
+        
+        // Create folders for better organization
+        const swarmFolder = gui.addFolder('Swarm Settings');
+        const behaviorFolder = gui.addFolder('Behavior Settings');
+        const advancedFolder = gui.addFolder('Advanced Settings');
+
+        swarmFolder.add(config, 'particleCount', 10, 500).step(1).onChange(createFlies);
+        swarmFolder.add(config, 'speed', 0.01, 0.35).step(0.01);
+        swarmFolder.add(config, 'particleSize', 0.1, 5);
+        
+        behaviorFolder.add(config, 'attraction', 0, 2);
+        behaviorFolder.add(config, 'avoidanceRadius', 0.5, 8);
+        behaviorFolder.add(config, 'avoidanceStrength', 0, 3);
+        behaviorFolder.add(config, 'cohesionStrength', 0, 0.5);
+        behaviorFolder.add(config, 'randomness', 0, 1);
+        
+        advancedFolder.add(config, 'mouseAvoidanceRadius', 5, 30);
+        advancedFolder.add(config, 'mouseAvoidanceStrength', 0, 5);
+
+        // Add toggles at the bottom
+        gui.add(config, 'hate').name('Hate Mode');
+        gui.add(config, 'invertColors').name('Invert Colors').onChange(updateColors);
+        gui.add(config, 'fullscreen').name('Fullscreen').onChange(value => {
+            if (value) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        // Add reset button for mobile users
+        gui.add({ resetSwarm: function() {
+            // Reset all flies
+            flies.forEach(fly => {
+                fly.isDying = false;
+                fly.deathProgress = 0;
+                fly.sprite.position.set(
+                    (Math.random() - 0.5) * 80,
+                    (Math.random() - 0.5) * 80,
+                    (Math.random() - 0.5) * 80
+                );
+                fly.velocity.set(
+                    (Math.random() - 0.5) * 2,
+                    (Math.random() - 0.5) * 2,
+                    (Math.random() - 0.5) * 2
+                );
+            });
+
+            // Clear food items
+            foodItems.forEach(food => {
+                scene.remove(food.mesh);
+            });
+            foodItems = [];
+
+            // Reset states
+            isKillingFlies = false;
+            config.killed = false;
+            dyingFlies.clear();
+
+            // Update GUI
+            for (let i in gui.__controllers) {
+                gui.__controllers[i].updateDisplay();
+            }
+        }}, 'resetSwarm').name('Reset Swarm');
+
+        // Initialize colors
+        updateColors();
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 1;
+
+            // Update and remove expired food
+            for (let i = foodItems.length - 1; i >= 0; i--) {
+                if (!foodItems[i].update(flies)) {
+                    foodItems[i].dispose();
+                    foodItems.splice(i, 1);
+                }
+            }
+
+            // Update each fly
+            flies.forEach(fly => fly.update(mousePosition, waveCenter, flies));
+            
+            renderer.render(scene, camera);
+        }
+
+        // Start animation
+        animate();
+
+        // Open folders by default
+        swarmFolder.open();
+        behaviorFolder.open();
+
+        // Show title for 5 seconds then fade out over 1.5 seconds
+        setTimeout(() => {
+            document.getElementById('main-title').classList.add('fade-out');
+            
+            // After fade is complete, set followText to false
+            setTimeout(() => {
+                followText = false;
+            }, 1500);
+        }, 5000);
+
+        // Text points setup
+        const textPoints = [];
+        const textCanvas = document.createElement('canvas');
+        const textCtx = textCanvas.getContext('2d');
+        textCanvas.width = 1024;
+        textCanvas.height = 256;
+        textCtx.font = 'bold 150px Arial';
+        textCtx.fillStyle = 'white';
+        textCtx.textAlign = 'center';
+        textCtx.textBaseline = 'middle';
+        textCtx.fillText('FLY SWARM', textCanvas.width/2, textCanvas.height/2);
+        const textImageData = textCtx.getImageData(0, 0, textCanvas.width, textCanvas.height);
+        
+        // Sample points from text
+        for (let y = 0; y < textCanvas.height; y += 4) {
+            for (let x = 0; x < textCanvas.width; x += 4) {
+                if (textImageData.data[(y * textCanvas.width + x) * 4] > 128) {
+                    textPoints.push(new THREE.Vector3(
+                        (x - textCanvas.width/2) * 0.1,
+                        -(y - textCanvas.height/2) * 0.1,
+                        0
+                    ));
+                }
+            }
+        }
+
+        // Fly class definition
+        class Fly {
+            constructor() {
+                this.sprite = new THREE.Sprite(flyMaterial);
+                this.sprite.scale.set(config.particleSize, config.particleSize, 1);
+                this.velocity = new THREE.Vector3(
+                    (Math.random() - 0.5) * 2,
+                    (Math.random() - 0.5) * 2,
+                    (Math.random() - 0.5) * 2
+                );
+                this.textPoint = textPoints[Math.floor(Math.random() * textPoints.length)];
+                this.sprite.position.set(
+                    (Math.random() - 0.5) * 80,
+                    (Math.random() - 0.5) * 80,
+                    (Math.random() - 0.5) * 80
+                );
+                this.randomForce = new THREE.Vector3();
+                this.nextRandomChange = 0;
+                this.targetOffset = new THREE.Vector3(
+                    (Math.random() - 0.5) * 8,  
+                    (Math.random() - 0.5) * 8,
+                    (Math.random() - 0.5) * 8
+                );
+                this.currentRotation = Math.atan2(this.velocity.y, this.velocity.x) - Math.PI/2;
+                this.randomOffset = Math.random() * Math.PI * 2;
+                this.trail = null;
+                this.glowTrail = null;
+                scene.add(this.sprite);
+            }
+
+            createTrail() {
+                const points = [
+                    this.sprite.position.clone(),
+                    this.sprite.position.clone().add(new THREE.Vector3(0, -20, 0))
+                ];
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                const line = new THREE.Line(geometry, lineMaterial.clone());
+                line.material.opacity = 1;
+                this.trail = line;
+                scene.add(line);
+                trails.push(line);
+
+                // Create glow effect
+                const glowGeometry = new THREE.TubeGeometry(
+                    new THREE.CatmullRomCurve3(points),
+                    20,
+                    0.2,
+                    8,
+                    false
+                );
+                const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial.clone());
+                glowMesh.material.uniforms.opacity.value = 1;
+                this.glowTrail = glowMesh;
+                scene.add(glowMesh);
+                trails.push(glowMesh);
+
+                // Start fade out timer
+                setTimeout(() => {
+                    const fadeInterval = setInterval(() => {
+                        if (this.trail) {
+                            this.trail.material.opacity -= 0.05;
+                            this.glowTrail.material.uniforms.opacity.value -= 0.05;
+                            
+                            if (this.trail.material.opacity <= 0) {
+                                clearInterval(fadeInterval);
+                                scene.remove(this.trail);
+                                scene.remove(this.glowTrail);
+                                this.trail = null;
+                                this.glowTrail = null;
+                            }
+                        }
+                    }, 33); // Update every frame
+                }, 700); // Start fading after 0.7 seconds
+            }
+
+            updateTrail() {
+                if (this.trail) {
+                    const positions = this.trail.geometry.attributes.position.array;
+                    positions[0] = this.sprite.position.x;
+                    positions[1] = this.sprite.position.y;
+                    positions[2] = this.sprite.position.z;
+                    this.trail.geometry.attributes.position.needsUpdate = true;
+
+                    // Update glow effect
+                    if (this.glowTrail) {
+                        const points = [
+                            new THREE.Vector3(positions[0], positions[1], positions[2]),
+                            new THREE.Vector3(positions[0], positions[1] - 20, positions[2])
+                        ];
+                        const newGeometry = new THREE.TubeGeometry(
+                            new THREE.CatmullRomCurve3(points),
+                            20,
+                            0.2,
+                            8,
+                            false
+                        );
+                        this.glowTrail.geometry.dispose();
+                        this.glowTrail.geometry = newGeometry;
+                    }
+                }
+            }
+
+            update(mousePosition, waveCenter, flies) {
+                if (config.killed) {
+                    if (dyingFlies.has(this)) {
+                        // Fall straight down faster
+                        this.velocity.set(0, -2, 0);
+                        this.sprite.position.add(this.velocity);
+                        
+                        // Update trail
+                        if (this.trail) {
+                            const positions = this.trail.geometry.attributes.position.array;
+                            positions[0] = this.sprite.position.x;
+                            positions[1] = this.sprite.position.y;
+                            positions[2] = this.sprite.position.z;
+                            this.trail.geometry.attributes.position.needsUpdate = true;
+
+                            if (this.glowTrail) {
+                                const points = [
+                                    new THREE.Vector3(positions[0], positions[1], positions[2]),
+                                    new THREE.Vector3(positions[0], positions[1] - 20, positions[2])
+                                ];
+                                const newGeometry = new THREE.TubeGeometry(
+                                    new THREE.CatmullRomCurve3(points),
+                                    20,
+                                    0.2,
+                                    8,
+                                    false
+                                );
+                                this.glowTrail.geometry.dispose();
+                                this.glowTrail.geometry = newGeometry;
+                            }
+                        }
+
+                        // Update rotation to face downward
+                        this.currentRotation = -Math.PI/2;
+                        this.sprite.material.rotation = this.currentRotation;
+                    }
+                    return;
+                }
+
+                this.updateRandomForce();
+
+                if (followText && titleConsumed < 1) {
+                    // Strong attraction to text center
+                    const textCenter = new THREE.Vector3(0, 0, 0);
+                    const toText = new THREE.Vector3().subVectors(textCenter, this.sprite.position);
+                    const distance = toText.length();
+                    
+                    // Stronger attraction when far, gentler when close
+                    const strength = Math.min(2, distance / 20) * config.attraction;
+                    toText.normalize().multiplyScalar(strength * config.speed * 2);
+                    this.velocity.add(toText);
+                    
+                    // Add some natural swarm movement
+                    const swarmOffset = new THREE.Vector3(
+                        Math.sin(time * 0.001 + this.randomOffset) * 0.3,
+                        Math.cos(time * 0.0015 + this.randomOffset) * 0.3,
+                        Math.sin(time * 0.002 + this.randomOffset) * 0.3
+                    );
+                    this.velocity.add(swarmOffset.multiplyScalar(0.1 * config.speed));
+                    
+                    // Add separation from other flies
+                    flies.forEach(fly => {
+                        if (fly !== this) {
+                            const toOtherFly = new THREE.Vector3().subVectors(this.sprite.position, fly.sprite.position);
+                            const flyDistance = toOtherFly.length();
+                            if (flyDistance < config.avoidanceRadius) {
+                                toOtherFly.normalize().multiplyScalar(config.avoidanceStrength * config.speed * 0.5 * (1 - flyDistance/config.avoidanceRadius));
+                                this.velocity.add(toOtherFly);
+                            }
+                        }
+                    });
+
+                    // Apply damping to reduce jittering
+                    this.velocity.multiplyScalar(0.95);
+                } else {
+                    // Find closest non-consumed food item
+                    let closestFood = null;
+                    let closestDist = Infinity;
+                    let secondClosestFood = null;
+                    let secondClosestDist = Infinity;
+
+                    foodItems.forEach(food => {
+                        if (!food.isConsumed()) {
+                            const dist = this.sprite.position.distanceTo(food.getPosition());
+                            if (dist < closestDist) {
+                                secondClosestFood = closestFood;
+                                secondClosestDist = closestDist;
+                                closestFood = food;
+                                closestDist = dist;
+                            } else if (dist < secondClosestDist) {
+                                secondClosestFood = food;
+                                secondClosestDist = dist;
+                            }
+                        }
+                    });
+
+                    if (closestFood) {
+                        // Determine if fly should go to second closest food
+                        const shouldGoToSecond = secondClosestFood && 
+                            secondClosestDist < closestDist * 1.5 && 
+                            Math.random() > 0.5;
+                        
+                        const targetFood = shouldGoToSecond ? secondClosestFood : closestFood;
+                        const toFood = new THREE.Vector3().subVectors(targetFood.getPosition(), this.sprite.position);
+                        const dist = toFood.length();
+                        
+                        // Strong attraction to food
+                        toFood.normalize().multiplyScalar(config.attraction * config.speed * 2);
+                        this.velocity.add(toFood);
+                        
+                        // Swarm around food when close
+                        if (dist < CONSUMPTION_RADIUS) {
+                            const orbit = new THREE.Vector3(-toFood.y, toFood.x, 0);
+                            orbit.normalize().multiplyScalar(config.speed);
+                            this.velocity.add(orbit);
+                        }
+                    } else if (config.hate) {
+                        // Calculate distance to mouse
+                        const toMouse = new THREE.Vector3().copy(this.sprite.position).sub(mousePosition);
+                        const distance = toMouse.length();
+                        const idealDistance = 20; // Radius of avoidance circle
+                        
+                        // Strong repulsion when too close to pointer
+                        if (distance < idealDistance * 1.5) {
+                            const repulsionStrength = (idealDistance * 1.5 - distance) / (idealDistance * 1.5);
+                            toMouse.normalize().multiplyScalar(config.speed * 4 * repulsionStrength);
+                            this.velocity.add(toMouse);
+                        }
+
+                        // Calculate viewport boundaries in world space
+                        const viewportBounds = {
+                            left: -camera.position.z * Math.tan((camera.fov * Math.PI / 180) / 2) * camera.aspect * 0.8,
+                            right: camera.position.z * Math.tan((camera.fov * Math.PI / 180) / 2) * camera.aspect * 0.8,
+                            top: camera.position.z * Math.tan((camera.fov * Math.PI / 180) / 2) * 0.8,
+                            bottom: -camera.position.z * Math.tan((camera.fov * Math.PI / 180) / 2) * 0.8
+                        };
+
+                        // Add boundary forces
+                        const pos = this.sprite.position;
+                        const boundaryForce = new THREE.Vector3();
+                        const boundaryMargin = 10;
+                        
+                        if (pos.x < viewportBounds.left + boundaryMargin) {
+                            boundaryForce.x += (viewportBounds.left + boundaryMargin - pos.x) * 0.1;
+                        }
+                        if (pos.x > viewportBounds.right - boundaryMargin) {
+                            boundaryForce.x += (viewportBounds.right - boundaryMargin - pos.x) * 0.1;
+                        }
+                        if (pos.y < viewportBounds.bottom + boundaryMargin) {
+                            boundaryForce.y += (viewportBounds.bottom + boundaryMargin - pos.y) * 0.1;
+                        }
+                        if (pos.y > viewportBounds.top - boundaryMargin) {
+                            boundaryForce.y += (viewportBounds.top - boundaryMargin - pos.y) * 0.1;
+                        }
+
+                        // Apply boundary force
+                        this.velocity.add(boundaryForce);
+
+                        // Find nearest fly ahead
+                        let nearestAheadDist = Infinity;
+                        let nearestAheadPos = null;
+                        
+                        flies.forEach(fly => {
+                            if (fly !== this) {
+                                const toOtherFly = new THREE.Vector3().subVectors(fly.sprite.position, this.sprite.position);
+                                const angle = toOtherFly.angleTo(this.velocity);
+                                const distance = toOtherFly.length();
+                                
+                                // Consider flies within 60 degree cone ahead
+                                if (angle < Math.PI / 3 && distance < nearestAheadDist && distance > 0) {
+                                    nearestAheadDist = distance;
+                                    nearestAheadPos = fly.sprite.position;
+                                }
+                            }
+                        });
+
+                        // Follow the fly ahead while maintaining distance
+                        if (nearestAheadPos) {
+                            const toAhead = new THREE.Vector3().subVectors(nearestAheadPos, this.sprite.position);
+                            const desiredDist = config.avoidanceRadius * 2;
+                            
+                            if (nearestAheadDist > desiredDist) {
+                                // Too far - catch up
+                                toAhead.normalize().multiplyScalar(config.speed * 1.5);
+                                this.velocity.lerp(toAhead, 0.1);
+                            } else if (nearestAheadDist < desiredDist) {
+                                // Too close - back off
+                                toAhead.normalize().multiplyScalar(-config.speed);
+                                this.velocity.add(toAhead);
+                            }
+                        }
+
+                        // If no fly ahead, join the swarm circle
+                        if (!nearestAheadPos) {
+                            // Find average position of all flies
+                            const center = new THREE.Vector3();
+                            flies.forEach(fly => center.add(fly.sprite.position));
+                            center.divideScalar(flies.length);
+
+                            // Calculate circular motion around center
+                            const toCenter = new THREE.Vector3().subVectors(this.sprite.position, center);
+                            const orbit = new THREE.Vector3(-toCenter.y, toCenter.x, 0);
+                            orbit.normalize().multiplyScalar(config.speed);
+                            
+                            // Maintain reasonable distance from center
+                            const centerDist = toCenter.length();
+                            const idealRadius = 15;
+                            if (centerDist > idealRadius) {
+                                toCenter.normalize().multiplyScalar(-config.speed * 0.5);
+                                this.velocity.add(toCenter);
+                            } else if (centerDist < idealRadius) {
+                                toCenter.normalize().multiplyScalar(config.speed * 0.5);
+                                this.velocity.add(toCenter);
+                            }
+                            
+                            this.velocity.add(orbit);
+                        }
+
+                        // Add slight randomness to prevent perfect symmetry
+                        this.velocity.add(new THREE.Vector3(
+                            (Math.random() - 0.5) * 0.01,
+                            (Math.random() - 0.5) * 0.01,
+                            0
+                        ));
+
+                        // Maintain minimum speed
+                        if (this.velocity.length() < config.speed * 0.5) {
+                            this.velocity.normalize().multiplyScalar(config.speed * 0.5);
+                        }
+                        
+                    } else if (isMouseStationary && this.sprite.position.distanceTo(mousePosition) < 30) {
+                        // Figure 8 behavior when mouse is stationary
+                        const time = Date.now() * 0.001;
+                        const scale = 5 + Math.random() * 3; // Random size for each fly
+                        const offset = this.randomOffset;
+                        
+                        // Calculate figure 8 position
+                        const x = scale * Math.sin(time + offset);
+                        const y = scale * Math.sin(2 * (time + offset)) * 0.5;
+                        
+                        // Target position relative to mouse
+                        const targetPos = new THREE.Vector3(
+                            mousePosition.x + x,
+                            mousePosition.y + y,
+                            mousePosition.z
+                        );
+                        
+                        // Move towards figure 8 position with speed
+                        const toTarget = targetPos.sub(this.sprite.position);
+                        toTarget.normalize().multiplyScalar(config.speed * 2);
+                        this.velocity.lerp(toTarget, 0.1);
+                    } else {
+                        // Normal pointer following behavior
+                        const toMouse = new THREE.Vector3().copy(mousePosition).sub(this.sprite.position);
+                        toMouse.normalize().multiplyScalar(config.attraction * config.speed);
+                        this.velocity.add(toMouse);
+                        
+                        // Add swarm movement
+                        const swarmOffset = new THREE.Vector3(
+                            Math.sin(time * 0.001 + this.randomOffset) * 0.5,
+                            Math.cos(time * 0.0015 + this.randomOffset) * 0.5,
+                            Math.sin(time * 0.002 + this.randomOffset) * 0.5
+                        );
+                        this.velocity.add(swarmOffset.multiplyScalar(0.1 * config.speed));
+                    }
+                    
+                    // Separation from other flies
+                    flies.forEach(fly => {
+                        if (fly !== this) {
+                            const toOtherFly = new THREE.Vector3().subVectors(this.sprite.position, fly.sprite.position);
+                            const flyDistance = toOtherFly.length();
+                            if (flyDistance < config.avoidanceRadius) {
+                                toOtherFly.normalize().multiplyScalar(config.avoidanceStrength * config.speed * (1 - flyDistance/config.avoidanceRadius));
+                                this.velocity.add(toOtherFly);
+                            }
+                        }
+                    });
+                }
+
+                // Apply damping
+                this.velocity.multiplyScalar(0.95);
+
+                // Update position
+                this.sprite.position.add(this.velocity);
+                
+                // Update rotation to face movement direction
+                if (this.velocity.length() > 0.01) {
+                    // Calculate angle based on velocity direction
+                    this.targetRotation = Math.atan2(this.velocity.y, this.velocity.x);
+                }
+                
+                // Smoothly interpolate current rotation to target rotation
+                const rotationDiff = this.targetRotation - this.currentRotation;
+                if (Math.abs(rotationDiff) > Math.PI) {
+                    if (rotationDiff > 0) {
+                        this.currentRotation += Math.PI * 2;
+                    } else {
+                        this.currentRotation -= Math.PI * 2;
+                    }
+                }
+                this.currentRotation += (this.targetRotation - this.currentRotation) * 0.2;
+                this.sprite.material.rotation = this.currentRotation - Math.PI / 2; // Subtract 90 degrees to make right side point forward
+
+                // Update scale
+                this.sprite.scale.set(config.particleSize, config.particleSize, 1);
+            }
+
+            updateRandomForce() {
+                if (Date.now() > this.nextRandomChange) {
+                    this.randomForce.set(
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2
+                    );
+                    this.nextRandomChange = Date.now() + 1000 + Math.random() * 1000;
+                }
+            }
+        }
+
+        // Create line material for trails
+        const lineMaterial = new THREE.LineBasicMaterial({
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+
+        // Create glow material
+        const glowMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                color: { value: new THREE.Color(0x00ffff) },
+                opacity: { value: 1.0 }
+            },
+            vertexShader: `
+                varying vec3 vNormal;
+                void main() {
+                    vNormal = normalize(normalMatrix * normal);
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 color;
+                uniform float opacity;
+                varying vec3 vNormal;
+                void main() {
+                    float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 4.0);
+                    gl_FragColor = vec4(color, opacity) * intensity;
+                }
+            `,
+            side: THREE.FrontSide,
+            blending: THREE.AdditiveBlending,
+            transparent: true
+        });
+
+        // Track trails and death animations
+        const trailIndex = 0;
+        let isDrawingTrails = false;
+
+        // Track food items
+        const MAX_FOOD_ITEMS = 6;
+        const CONSUMPTION_RADIUS = 8; // Radius within which flies consume food
+        const BASE_CONSUMPTION_RATE = 0.00024; // Base rate for normal difficulty
+        const MIN_FLIES_TO_CONSUME = 3; // Minimum flies needed to start consumption
+
+        // Function to get current consumption rate based on particle count
+        function getCurrentConsumptionRate() {
+            if (config.particleCount > 180) {
+                // Calculate scaling factor based on how far above 180 we are
+                const excess = config.particleCount - 180;
+                const maxExcess = 500 - 180;
+                const progress = excess / maxExcess;
+                
+                // Exponential difficulty increase
+                // At 500 particles, scaleFactor will be 0.333 (200% more difficult)
+                const scaleFactor = 1 / (1 + (2 * progress * progress));
+                
+                return BASE_CONSUMPTION_RATE * scaleFactor;
+            }
+            return BASE_CONSUMPTION_RATE;
+        }
+
+        // Food class
+        class Food {
+            constructor(position) {
+                // Create SVG texture for food
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 256;
+                canvas.height = 256;
+                
+                const svgData = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256" width="80px" height="80px" fill-rule="nonzero"><g fill="${config.invertColors ? '#000000' : '#ffffff'}" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(3.2,3.2)"><path d="M9,11c-2.19922,0 -4,1.80078 -4,4v51h0.00781c0.00781,1.60156 1.32422,3 2.99219,3h58.87109c1.70703,0 3.19531,-1.21094 3.53906,-2.88672l6.16797,-29.97266c0.33203,-1.60156 -0.92187,-3.14062 -2.55859,-3.14062h-4.01953v-12c0,-2.19922 -1.80078,-4 -4,-4h-37.83203l-0.96484,-2.30859c-0.92969,-2.23047 -3.11719,-3.69141 -5.53516,-3.69141zM9,13h12.66797c1.61719,0 3.07031,0.96875 3.69141,2.46094l1.47266,3.53906h39.16797c1.11719,0 2,0.88281 2,2v12h-53.00781c-1.89453,0 -3.53516,1.33984 -3.91797,3.19141l-4.07422,19.79297v-40.98437c0,-1.11719 0.88281,-2 2,-2zM14.99219,35h53.00781c0,0.55078 0.44922,1 1,1c0.55078,0 1,-0.44922 1,-1h4.01953c0.41016,0 0.68359,0.33594 0.60156,0.73828l-4.70312,22.85938c-0.16016,-0.36328 -0.51953,-0.59766 -0.91797,-0.59766c-0.55078,0 -1,0.44922 -1,1c0,0.55078 0.44922,1 1,1c0.25391,0 0.5,-0.09766 0.68359,-0.26953l-0.47266,2.29297c-0.07031,-0.01562 -0.14062,-0.02344 -0.21094,-0.02344c-0.55078,0 -1,0.44922 -1,1c0,0.47656 0.33984,0.89063 0.80859,0.98047l-0.35547,1.73438c-0.15625,0.75391 -0.8125,1.28516 -1.58203,1.28516h-58.87109c-0.65234,0 -1.10937,-0.5625 -0.97656,-1.20312l6.00781,-29.20312c0.19531,-0.93359 1.00391,-1.59375 1.96094,-1.59375z"></path></g></g></svg>`;
+                
+                const img = new Image();
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                };
+                img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+
+                // Create mesh with SVG texture
+                const geometry = new THREE.PlaneGeometry(6, 6);
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.needsUpdate = true;
+                const material = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    transparent: true,
+                    opacity: 1
+                });
+
+                this.mesh = new THREE.Mesh(geometry, material);
+                this.mesh.position.copy(position);
+                this.mesh.position.z = 0;
+                this.consumed = 0;
+                this.originalScale = 1;
+                this.isBeingConsumed = false;
+                this.nearbyFlies = 0;
+                this.consumptionPause = 0;
+                this.pulseTime = 0;
+                scene.add(this.mesh);
+            }
+
+            update(flies) {
+                // Count nearby flies (only count alive ones)
+                this.nearbyFlies = 0;
+                flies.forEach(fly => {
+                    if (!config.killed && fly.sprite.position.distanceTo(this.mesh.position) < CONSUMPTION_RADIUS) {
+                        this.nearbyFlies++;
+                    }
+                });
+
+                // Stop consumption if swarm is dying
+                if (config.killed) {
+                    this.isBeingConsumed = false;
+                    this.consumptionPause = 0;
+                    this.nearbyFlies = 0;
+                    // Reset pulse when not being consumed
+                    const scale = this.originalScale * (1 - this.consumed * 0.7);
+                    this.mesh.scale.set(scale, scale, 1);
+                    this.mesh.material.opacity = 1 - this.consumed * 0.7;
+                    return true;
+                }
+
+                // Start consuming only when enough flies are nearby
+                if (this.nearbyFlies >= MIN_FLIES_TO_CONSUME) {
+                    this.isBeingConsumed = true;
+                    this.consumptionPause = 0;
+                } else {
+                    // If flies leave, pause consumption for a short time
+                    this.consumptionPause += 1;
+                    if (this.consumptionPause > 60) {
+                        this.isBeingConsumed = false;
+                    }
+                }
+
+                // Update consumption
+                if (this.isBeingConsumed) {
+                    // Get current consumption rate based on particle count
+                    const currentRate = getCurrentConsumptionRate();
+                    // Consumption rate based on number of flies
+                    const rate = currentRate * this.nearbyFlies;
+                    this.consumed += rate;
+
+                    if (this.consumed >= 1) {
+                        return false;
+                    }
+
+                    // Update pulse effect
+                    this.pulseTime += 0.1;
+                    const pulseScale = 1 + Math.sin(this.pulseTime) * 0.1;
+                    
+                    // Scale down the food with pulse effect
+                    const baseScale = this.originalScale * (1 - this.consumed * 0.7);
+                    const finalScale = baseScale * pulseScale;
+                    this.mesh.scale.set(finalScale, finalScale, 1);
+
+                    // Pulse opacity too
+                    const baseOpacity = 1 - this.consumed * 0.7;
+                    const pulseOpacity = baseOpacity * (1 + Math.sin(this.pulseTime * 1.5) * 0.2);
+                    this.mesh.material.opacity = pulseOpacity;
+                } else {
+                    // Reset pulse when not being consumed
+                    const scale = this.originalScale * (1 - this.consumed * 0.7);
+                    this.mesh.scale.set(scale, scale, 1);
+                    this.mesh.material.opacity = 1 - this.consumed * 0.7;
+                }
+                
+                return true;
+            }
+
+            dispose() {
+                scene.remove(this.mesh);
+                this.mesh.geometry.dispose();
+                this.mesh.material.dispose();
+            }
+
+            getPosition() {
+                return this.mesh.position;
+            }
+
+            isConsumed() {
+                return this.consumed >= 1;
+            }
+
+            resetConsumption() {
+                this.isBeingConsumed = false;
+                this.consumptionPause = 0;
+                this.nearbyFlies = 0;
+                this.pulseTime = 0;
+                const scale = this.originalScale * (1 - this.consumed * 0.7);
+                this.mesh.scale.set(scale, scale, 1);
+                this.mesh.material.opacity = 1 - this.consumed * 0.7;
+            }
+        }
+
+        // Mouse and touch tracking
+        const mouse = new THREE.Vector2();
+        const mousePosition = new THREE.Vector3();
+        const lastMousePositions = [];
+        let lastMouseMoveTime = Date.now();
+        let isMouseStationary = false;
+        let waveTime = 0;
+        let isMouseDown = false;
+        const raycaster = new THREE.Raycaster();
+
+        // Handle both mouse and touch events
+        function updateMousePosition(clientX, clientY) {
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersectPoint = new THREE.Vector3();
+            raycaster.ray.at(20, intersectPoint);
+            mousePosition.copy(intersectPoint);
+
+            // Update wave effect
+            lastMousePositions.push({ x: mousePosition.x, y: mousePosition.y, time: Date.now() });
+            if (lastMousePositions.length > 10) lastMousePositions.shift();
+            
+            lastMouseMoveTime = Date.now();
+            isMouseStationary = false;
+        }
+
+        // Mouse/Touch move handler
+        function handleMove(event) {
+            event.preventDefault();
+            const pos = event.touches ? event.touches[0] : event;
+            updateMousePosition(pos.clientX, pos.clientY);
+        }
+
+        // Mouse/Touch click/tap handler
+        function handleClick(event) {
+            event.preventDefault();
+            const pos = event.touches ? event.touches[0] : event;
+            
+            // Check if clicking on GUI controls
+            const guiElement = document.querySelector('.dg.ac');
+            if (guiElement) {
+                const rect = guiElement.getBoundingClientRect();
+                if (pos.clientX >= rect.left - 20 && 
+                    pos.clientX <= rect.right + 20 && 
+                    pos.clientY >= rect.top - 20 && 
+                    pos.clientY <= rect.bottom + 20) {
+                    return; // Don't create food if near GUI
+                }
+            }
+
+            // Only create food if we have less than the maximum
+            if (foodItems.length < MAX_FOOD_ITEMS) {
+                const rect = renderer.domElement.getBoundingClientRect();
+                const x = ((pos.clientX - rect.left) / rect.width) * 2 - 1;
+                const y = -((pos.clientY - rect.top) / rect.height) * 2 + 1;
+
+                const vector = new THREE.Vector3(x, y, 0);
+                vector.unproject(camera);
+                const dir = vector.sub(camera.position).normalize();
+                const distance = -camera.position.z / dir.z;
+                const position = camera.position.clone().add(dir.multiplyScalar(distance));
+
+                const food = new Food(position);
+                foodItems.push(food);
+            }
+        }
+
+        // Add event listeners for both mouse and touch
+        window.addEventListener('mousemove', handleMove, { passive: false });
+        window.addEventListener('touchmove', handleMove, { passive: false });
+        window.addEventListener('click', handleClick, { passive: false });
+        window.addEventListener('touchstart', handleClick, { passive: false });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        });
+
+        // Prevent default touch behaviors
+        window.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+        window.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+
+        // Function to update fly texture
+        function updateFlyTexture(svgData) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 256;
+            canvas.height = 256;
+            
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.needsUpdate = true;
+                texture.minFilter = THREE.LinearFilter;
+                texture.magFilter = THREE.LinearFilter;
+
+                // Update all flies with new texture
+                flies.forEach(fly => {
+                    fly.sprite.material = new THREE.SpriteMaterial({
+                        map: texture,
+                        transparent: true,
+                        alphaTest: 0.1
+                    });
+                });
+
+                // Store current texture for resets
+                flyMaterial.map = texture;
+                flyMaterial.needsUpdate = true;
+            };
+            img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+        }
+
+        // Function to update colors based on inversion setting
+        function updateColors() {
+            const textColor = config.invertColors ? '#000000' : '#ffffff';
+            const bgColor = config.invertColors ? '#ffffff' : '#000000';
+            
+            // Update background
+            scene.background = new THREE.Color(bgColor);
+            
+            // Update document body class for text color
+            document.body.classList.toggle('inverted', config.invertColors);
+            
+            // Create SVG with current color
+            const svgData = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256" width="50px" height="50px">
+                <g transform="scale(10.66667,10.66667)">
+                    <path fill="${textColor}" d="M7,2l12,11.2l-5.8,0.5l3.3,7.3l-2.2,1l-3.2,-7.4l-4.1,3.9v-16.5"></path>
+                </g>
+            </svg>`;
+            updateFlyTexture(svgData);
+
+            // Update existing food items
+            foodItems.forEach(food => {
+                if (food.mesh.material.map) {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 256;
+                    canvas.height = 256;
+                    
+                    const foodSvg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256" width="80px" height="80px" fill-rule="nonzero"><g fill="${textColor}" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(3.2,3.2)"><path d="M9,11c-2.19922,0 -4,1.80078 -4,4v51h0.00781c0.00781,1.60156 1.32422,3 2.99219,3h58.87109c1.70703,0 3.19531,-1.21094 3.53906,-2.88672l6.16797,-29.97266c0.33203,-1.60156 -0.92187,-3.14062 -2.55859,-3.14062h-4.01953v-12c0,-2.19922 -1.80078,-4 -4,-4h-37.83203l-0.96484,-2.30859c-0.92969,-2.23047 -3.11719,-3.69141 -5.53516,-3.69141zM9,13h12.66797c1.61719,0 3.07031,0.96875 3.69141,2.46094l1.47266,3.53906h39.16797c1.11719,0 2,0.88281 2,2v12h-53.00781c-1.89453,0 -3.53516,1.33984 -3.91797,3.19141l-4.07422,19.79297v-40.98437c0,-1.11719 0.88281,-2 2,-2zM14.99219,35h53.00781c0,0.55078 0.44922,1 1,1c0.55078,0 1,-0.44922 1,-1h4.01953c0.41016,0 0.68359,0.33594 0.60156,0.73828l-4.70312,22.85938c-0.16016,-0.36328 -0.51953,-0.59766 -0.91797,-0.59766c-0.55078,0 -1,0.44922 -1,1c0,0.55078 0.44922,1 1,1c0.25391,0 0.5,-0.09766 0.68359,-0.26953l-0.47266,2.29297c-0.07031,-0.01562 -0.14062,-0.02344 -0.21094,-0.02344c-0.55078,0 -1,0.44922 -1,1c0,0.47656 0.33984,0.89063 0.80859,0.98047l-0.35547,1.73438c-0.15625,0.75391 -0.8125,1.28516 -1.58203,1.28516h-58.87109c-0.65234,0 -1.10937,-0.5625 -0.97656,-1.20312l6.00781,-29.20312c0.19531,-0.93359 1.00391,-1.59375 1.96094,-1.59375z"></path></g></g></svg>`;
+                    
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const texture = new THREE.CanvasTexture(canvas);
+                        texture.needsUpdate = true;
+                        texture.minFilter = THREE.LinearFilter;
+                        texture.magFilter = THREE.LinearFilter;
+                        food.mesh.material.map = texture;
+                        food.mesh.material.needsUpdate = true;
+                    };
+                    img.src = 'data:image/svg+xml;base64,' + btoa(foodSvg);
+                }
+            });
+
+            // Update title color
+            const title = document.getElementById('title');
+            if (title) {
+                title.style.color = textColor;
+            }
+        }
+
+        // Handle keyboard events
+        document.addEventListener('keydown', function(event) {
+            if (event.code === 'Space') {
+                if (!config.killed) {
+                    config.killed = true;
+                    // Kill particles with random delays
+                    flies.forEach((fly, index) => {
+                        setTimeout(() => {
+                            fly.isDying = true;
+                        }, Math.random() * 1000);
+                    });
+                }
+            } else if (event.key.toLowerCase() === 'r') {
+                // Reset all flies
+                flies.forEach(fly => {
+                    fly.isDying = false;
+                    fly.deathProgress = 0;
+                    fly.sprite.position.set(
+                        (Math.random() - 0.5) * 80,
+                        (Math.random() - 0.5) * 80,
+                        (Math.random() - 0.5) * 80
+                    );
+                    fly.velocity.set(
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2,
+                        (Math.random() - 0.5) * 2
+                    );
+                });
+
+                // Clear food items
+                foodItems.forEach(food => {
+                    scene.remove(food.mesh);
+                });
+                foodItems = [];
+
+                // Reset states
+                isKillingFlies = false;
+                config.killed = false;
+                dyingFlies.clear();
+
+                // Update GUI
+                for (let i in gui.__controllers) {
+                    gui.__controllers[i].updateDisplay();
+                }
+            }
+        });
+    </script>
+    <script>
+        const signature = document.getElementById('console-signature');
+        const text = '> instructions:\n> click anywhere to feed\n> spacebar to kill\n> R to reset\n\n$ by drbaph';
+        
+        let html = '';
+        let delay = 0;
+        
+        for(let char of text) {
+            html += `<span style="--delay: ${delay}">${char}</span>`;
+            delay++;
+        }
+        
+        signature.innerHTML = html;
+        
+        // Type out each character one by one
+        const spans = signature.querySelectorAll('span');
+        let currentChar = 0;
+        
+        function typeNextChar() {
+            if (currentChar < spans.length) {
+                spans[currentChar].classList.add('visible');
+                currentChar++;
+                setTimeout(typeNextChar, 50);
+            } else {
+                // Start cursor animation after typing is complete
+                setTimeout(() => {
+                    signature.classList.add('typing-done');
+                }, 200);
+            }
+        }
+        
+        // Start typing after a short delay
+        setTimeout(typeNextChar, 500);
+    </script>
+</body>
+</html>
