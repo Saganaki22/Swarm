@@ -184,189 +184,207 @@
         body.inverted #title {
             color: black;
         }
-        #pauseText {
+        /* Pause Icon Styles */
+        #pauseIcon {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            display: none;
+            z-index: 1000;
+            filter: drop-shadow(0 0 10px #ffffff);
+            animation: breathe 2s ease-in-out infinite;
+        }
+
+        body.inverted #pauseIcon {
+            filter: drop-shadow(0 0 10px #000000);
+        }
+
+        #pauseIcon path {
+            fill: #ffffff;
+            stroke: #000000;
+            stroke-width: 10;
+        }
+
+        body.inverted #pauseIcon path {
+            fill: #000000;
+            stroke: #ffffff;
+            stroke-width: 10
+        }
+
+        @keyframes breathe {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.7;
+            }
+        }
+        #food-counter {
+            position: fixed;
+            bottom: 200px;
+            left: 20px;
+            color: white;
+            font-family: 'Fira Code', monospace;
+            font-size: 16px;
+            opacity: 0.8;
+            z-index: 1000;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        #food-counter svg {
+            width: 40px;
+            height: 40px;
+            vertical-align: middle;
+        }
+        body.inverted #food-counter {
+            color: #000000;
+        }
+        @media (max-width: 600px) {
+            #food-counter {
+                bottom: 150px;
+                font-size: 20px !important;
+            }
+        }
+        /* Level Display */
+        #level-display {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-family: 'Fira Code', monospace;
+            font-size: 24px;
+            z-index: 1000;
+            transition: color 0.3s;
+        }
+
+        body.inverted #level-display {
+            color: black;
+        }
+
+        /* Progress Bar */
+        #progress-container {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            color: white;
-            font-size: 24px;
+            width: 80%;
+            max-width: 600px;
+            height: 30px;
+            border: 2px solid white;
+            border-radius: 15px;
+            overflow: hidden;
             z-index: 1000;
-            pointer-events: none;
-            display: none;
-            animation: breathe 2s ease-in-out infinite;
         }
-        body.inverted #pauseText {
-            color: black;
-        }
-        @keyframes breathe {
-            0% { opacity: 0.4; }
-            50% { opacity: 1; }
-            100% { opacity: 0.4; }
-        }
+
         @media (max-width: 600px) {
-            .dg.ac {
-                right: 0 !important;
-                top: 0 !important;
+            #progress-container {
+                bottom: 45px;
+                width: 60%;
+                max-width: 200px;
+                height: 15px;
+                border-width: 1px;
+                border-radius: 8px;
             }
-            /* Make GUI bigger on mobile */
-            .dg.main {
-                font-size: 16px !important;
-                width: 300px !important;
-                position: fixed !important;
-                right: 0 !important;
-                top: 0 !important;
-                margin-right: 0 !important;
-                transition: transform 0.3s ease-in-out !important;
-                transform: translateY(0) !important;
+
+            #progress-bar {
+                height: 15px;
             }
-            .dg.main.closed {
-                transform: translateY(-200vh) !important;
-                opacity: 0 !important;
-                pointer-events: none !important;
-                visibility: hidden !important;
-                position: fixed !important;
-                top: -9999px !important;
-                left: -9999px !important;
-            }
-            .dg.main.closed * {
-                display: none !important;
-                visibility: hidden !important;
-            }
-            .dg.main.closed .close-button,
-            .dg.main.closed .content,
-            .dg.main.closed .property-name,
-            .dg.main.closed .c {
-                display: none !important;
-                visibility: hidden !important;
-            }
-            /* Hide close button when closed */
-            .dg.main.closed .close-button {
-                display: none !important;
-            }
-            .dg.main .close-button {
-                font-size: 16px !important;
-                line-height: 40px !important;
-                height: 40px !important;
-                position: relative !important;
-                transition: transform 0.3s ease-in-out !important;
-            }
-            /* Hide the content area when closed */
-            .dg.main.closed .content {
-                display: none !important;
-            }
-            /* Adjust GUI controls */
-            .dg li:not(.folder) {
-                height: 40px !important;
-                line-height: 40px !important;
-            }
-            .dg .c {
-                width: 60% !important;
-            }
-            .dg .property-name {
-                width: 40% !important;
-                line-height: 40px !important;
-            }
-            .dg .c input[type=text] {
-                font-size: 16px !important;
-                height: 24px !important;
-            }
-            .dg .c select {
-                font-size: 16px !important;
-                height: 24px !important;
-            }
-            .dg .c input[type=checkbox] {
-                height: 20px !important;
-                width: 20px !important;
-                margin-top: 10px !important;
-            }
-            .dg .slider {
-                height: 40px !important;
-            }
-            .dg .slider-fg {
-                height: 40px !important;
-            }
-            /* Ensure toggles are fully visible */
-            .dg .cr.boolean {
-                border-left: 3px solid #555 !important;
-            }
-            .dg .cr.boolean .property-name {
-                width: calc(100% - 60px) !important;
-            }
-            .dg .cr.boolean .c {
-                width: 60px !important;
-                text-align: right !important;
-            }
-            /* Social icons positioning */
-            #instagram-link {
-                width: 50px !important;
-                height: 50px !important;
-                bottom: 20px !important;
-                right: 20px !important;
-            }
-            #github-link {
-                width: 50px !important;
-                height: 50px !important;
-                bottom: 20px !important;
-                right: 80px !important;
+
+            #progress-text {
+                line-height: 15px;
+                font-size: 10px;
             }
         }
-        /* Mobile Options Button */
-        #mobile-options-btn {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.7);
+
+        body.inverted #progress-container {
+            border-color: black;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #00ff00;
+            transition: width 0.3s ease;
+            position: relative;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+        #progress-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 30px;
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 5px;
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 1001;
-            transition: background 0.3s, transform 0.2s;
-        }
-        
-        #mobile-options-btn:hover {
-            background: rgba(0, 0, 0, 0.8);
-            transform: scale(1.05);
+            font-family: 'Fira Code', monospace;
+            mix-blend-mode: difference;
         }
 
-        body.inverted #mobile-options-btn {
-            background: rgba(255, 255, 255, 0.7);
-            color: black;
-            border: 1px solid rgba(0, 0, 0, 0.3);
+        /* Level display flash animation */
+        @keyframes levelFlash {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        body.inverted #mobile-options-btn:hover {
-            background: rgba(255, 255, 255, 0.8);
+        /* Progress bar completion animation */
+        @keyframes barComplete {
+            0% { box-shadow: 0 0 10px #00ff00; }
+            50% { box-shadow: 0 0 20px #00ff00; }
+            100% { box-shadow: 0 0 10px #00ff00; }
         }
 
-        @media (max-width: 600px) {
-            #mobile-options-btn {
-                display: block;
-            }
-            .dg.main.closed {
-                transform: translateY(-200vh) !important;
-                opacity: 0 !important;
-                pointer-events: none !important;
-                visibility: hidden !important;
-                position: fixed !important;
-                top: -9999px !important;
-                left: -9999px !important;
-            }
+        .level-flash {
+            animation: levelFlash 0.5s ease-in-out;
+        }
+
+        .bar-complete {
+            animation: barComplete 0.5s ease-in-out;
         }
     </style>
 </head>
 <body>
-    <button id="mobile-options-btn">Options</button>
     <div id="title">
         <div id="main-title">Swarm</div>
     </div>
     <div id="console-signature"></div>
-    <div id="pauseText">Paused</div>
+    <div id="food-counter">
+        <span id="food-count">10x</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0,256,256" width="20px" height="20px" fill-rule="nonzero">
+            <g fill="currentColor" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                <g transform="scale(3.2,3.2)">
+                    <path d="M9,11c-2.19922,0 -4,1.80078 -4,4v51h0.00781c0.00781,1.60156 1.32422,3 2.99219,3h58.87109c1.70703,0 3.19531,-1.21094 3.53906,-2.88672l6.16797,-29.97266c0.33203,-1.60156 -0.92187,-3.14062 -2.55859,-3.14062h-4.01953v-12c0,-2.19922 -1.80078,-4 -4,-4h-37.83203l-0.96484,-2.30859c-0.92969,-2.23047 -3.11719,-3.69141 -5.53516,-3.69141z"></path>
+                </g>
+            </g>
+        </svg>
+    </div>
+    <div id="level-display">Level 1</div>
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+        <div id="progress-text">0%</div>
+    </div>
+    <svg id="pauseIcon" version="1.0" xmlns="http://www.w3.org/2000/svg"
+        width="256pt" height="256pt" viewBox="0 0 256.000000 256.000000"
+        preserveAspectRatio="xMidYMid meet">
+        <g transform="translate(0.000000,256.000000) scale(0.100000,-0.100000)">
+            <path d="M560 2387 c-49 -16 -133 -102 -148 -153 -17 -59 -17 -1849 0 -1908
+            16 -55 99 -138 154 -154 63 -19 339 -16 397 4 57 19 128 93 145 152 17 57 17
+            1847 0 1904 -17 59 -88 133 -145 152 -55 19 -346 21 -403 3z"/>
+            <path d="M1600 2387 c-49 -16 -133 -102 -148 -153 -17 -59 -17 -1849 0 -1908
+            16 -55 99 -138 154 -154 63 -19 339 -16 397 4 57 19 128 93 145 152 17 57 17
+            1847 0 1904 -17 59 -88 133 -145 152 -55 19 -346 21 -403 3z"/>
+        </g>
+    </svg>
     <a id="instagram-link" href="https://www.instagram.com/drbaph/" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98 96">
             <g fill="#ffffff">
@@ -428,10 +446,9 @@
 
         // Create SVG for fly sprite
         const svgData = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256" width="50px" height="50px">
-            <g transform="scale(10.66667,10.66667)">
-                <path fill="#ffffff" d="M7,2l12,11.2l-5.8,0.5l3.3,7.3l-2.2,1l-3.2,-7.4l-4.1,3.9v-16.5"></path>
-            </g>
-        </svg>`;
+            <g fill="#ffffff">
+                <g transform="scale(10.66667,10.66667)">
+                    <path d="M9,11c-2.19922,0 -4,1.80078 -4,4v51h0.00781c0.00781,1.60156 1.32422,3 2.99219,3h58.87109c1.70703,0 3.19531,-1.21094 3.53906,-2.88672l6.16797,-29.97266c0.33203,-1.60156 -0.92187,-3.14062 -2.55859,-3.14062h-4.01953v-12c0,-2.19922 -1.80078,-4 -4,-4h-37.83203l-0.96484,-2.30859c-0.92969,-2.23047 -3.11719,-3.69141 -5.53516,-3.69141zM9,13h12.66797c1.61719,0 3.07031,0.96875 3.69141,2.46094l1.47266,3.53906h39.16797c1.11719,0 2,0.88281 2,2v12h-53.00781c-1.89453,0 -3.53516,1.33984 -3.91797,3.19141l-4.07422,19.79297v-40.98437c0,-1.11719 0.88281,-2 2,-2zM14.99219,35h53.00781c0,0.55078 0.44922,1 1,1c0.55078,0 1,-0.44922 1,-1h4.01953c0.41016,0 0.68359,0.33594 0.60156,0.73828l-4.70312,22.85938c-0.16016,-0.36328 -0.51953,-0.59766 -0.91797,-0.59766c-0.55078,0 -1,0.44922 -1,1c0,0.55078 0.44922,1 1,1c0.25391,0 0.5,-0.09766 0.68359,-0.26953l-0.47266,2.29297c-0.07031,-0.01562 -0.14062,-0.02344 -0.21094,-0.02344c-0.55078,0 -1,0.44922 -1,1c0,0.47656 0.33984,0.89063 0.80859,0.98047l-0.35547,1.73438c-0.15625,0.75391 -0.8125,1.28516 -1.58203,1.28516h-58.87109c-0.65234,0 -1.10937,-0.5625 -0.97656,-1.20312l6.00781,-29.20312c0.19531,-0.93359 1.00391,-1.59375 1.96094,-1.59375z"></path></g></g></svg>`;
 
         // Create canvas for texture
         const canvas = document.createElement('canvas');
@@ -484,61 +501,27 @@
         }
 
         // GUI setup
-        const isMobile = window.innerWidth <= 600;
         const gui = new dat.GUI({ 
             autoPlace: true, 
-            closed: true,
-            hideable: true
+            closed: true
         });
-        
-        // Update close button text based on GUI state
-        const updateCloseButtonText = () => {
-            const closeButton = gui.domElement.querySelector('.close-button');
-            if (closeButton) {
-                closeButton.innerHTML = gui.closed ? 'Open Controls' : 'Close Controls';
-            }
-        };
 
-        // Handle GUI open/close events
-        gui.domElement.addEventListener('click', (e) => {
-            if (e.target.classList.contains('close-button')) {
-                // Wait for GUI state to update
-                setTimeout(updateCloseButtonText, 0);
-            }
-        });
-        
-        // Mobile options button setup
-        const mobileOptionsBtn = document.getElementById('mobile-options-btn');
-        
-        if (isMobile) {
-            gui.close();
-            gui.domElement.style.display = 'none';
-            
-            // Show button when GUI is closed
-            mobileOptionsBtn.style.display = 'block';
-            
-            // Handle mobile options button click
-            mobileOptionsBtn.addEventListener('click', () => {
-                gui.domElement.style.display = '';
-                gui.open();
-                mobileOptionsBtn.style.display = 'none';
-                updateCloseButtonText();
-            });
-            
-            // Handle GUI close button click
-            const closeButton = gui.domElement.querySelector('.close-button');
-            closeButton.addEventListener('click', () => {
-                gui.close();
-                setTimeout(() => {
-                    gui.domElement.style.display = 'none';
-                    mobileOptionsBtn.style.display = 'block';
-                    updateCloseButtonText();
-                }, 300); // Wait for transition
-            });
+        // Update the close button text initially
+        const closeButton = gui.domElement.querySelector('.close-button');
+        if (closeButton) {
+            closeButton.innerHTML = 'Open Controls';
         }
 
-        // Initial text update
-        updateCloseButtonText();
+        // Add event listener to update button text
+        gui.domElement.addEventListener('click', (e) => {
+            if (e.target.classList.contains('close-button')) {
+                e.preventDefault();
+                // Update text after a short delay to ensure GUI state has changed
+                setTimeout(() => {
+                    e.target.innerHTML = gui.closed ? 'Open Controls' : 'Close Controls';
+                }, 50);
+            }
+        });
 
         // Create folders for better organization
         const swarmFolder = gui.addFolder('Swarm Settings');
@@ -574,35 +557,53 @@
         });
 
         // Add reset button for mobile users
-        gui.add({ resetSwarm: function() {
-            // Reset all flies
+        gui.add({ reset: function() {
+            // Reset fly positions and velocities
             flies.forEach(fly => {
-                fly.isDying = false;
-                fly.deathProgress = 0;
+                scene.remove(fly.sprite);
+            });
+            flies.length = 0;
+            
+            // Add initial flies
+            for (let i = 0; i < 20; i++) {
+                const fly = new Fly();
                 fly.sprite.position.set(
-                    (Math.random() - 0.5) * 80,
-                    (Math.random() - 0.5) * 80,
-                    (Math.random() - 0.5) * 80
+                    (Math.random() - 0.5) * window.innerWidth,
+                    (Math.random() - 0.5) * window.innerHeight,
+                    0
                 );
                 fly.velocity.set(
                     (Math.random() - 0.5) * 2,
                     (Math.random() - 0.5) * 2,
                     (Math.random() - 0.5) * 2
                 );
-            });
+                flies.push(fly);
+                scene.add(fly.sprite);
+            }
 
             // Reset states
             isKillingFlies = false;
             config.killed = false;
             config.paused = false;
-            document.getElementById('pauseText').style.display = 'none';
+            document.getElementById('pauseIcon').style.display = 'none';
             dyingFlies.clear();
+
+            // Clear all food items
+            foodItems.forEach(food => food.dispose());
+            foodItems.length = 0;
+            updateFoodCounter();
+
+            // Reset level system
+            currentLevel = 1;
+            foodsConsumed = 0;
+            document.getElementById('level-display').textContent = 'Level 1';
+            updateProgress();
 
             // Update GUI
             for (let i in gui.__controllers) {
                 gui.__controllers[i].updateDisplay();
             }
-        }}, 'resetSwarm').name('Reset Swarm');
+        }}, 'reset').name('Reset Simulation');
 
         // Initialize colors
         updateColors();
@@ -623,8 +624,19 @@
                 if (!foodItems[i].update(flies)) {
                     foodItems[i].dispose();
                     foodItems.splice(i, 1);
+                    updateFoodCounter(); // Update counter when food is removed
                 }
             }
+
+            // Handle food consumption
+            foodItems.forEach((food, index) => {
+                const foodPos = food.getPosition();
+                const distance = mousePosition.distanceTo(foodPos);
+                
+                if (distance < 30) {  // Consumption radius
+                    consumeFood(food, index);
+                }
+            });
 
             // Update each fly
             flies.forEach(fly => fly.update(mousePosition, waveCenter, flies));
@@ -1136,7 +1148,7 @@
         let isDrawingTrails = false;
 
         // Track food items
-        const MAX_FOOD_ITEMS = 6;
+        const MAX_FOOD_ITEMS = 10;
         const CONSUMPTION_RADIUS = 8; // Radius within which flies consume food
         const BASE_CONSUMPTION_RATE = 0.00024; // Base rate for normal difficulty
         const MIN_FLIES_TO_CONSUME = 3; // Minimum flies needed to start consumption
@@ -1158,6 +1170,15 @@
             return BASE_CONSUMPTION_RATE;
         }
 
+        // Function to update food counter display
+        function updateFoodCounter() {
+            const remainingFood = MAX_FOOD_ITEMS - foodItems.length;
+            document.getElementById('food-count').textContent = remainingFood + 'x';
+        }
+
+        // Initialize food counter
+        updateFoodCounter();
+
         // Food class
         class Food {
             constructor(position) {
@@ -1168,23 +1189,15 @@
                 canvas.height = 256;
                 
                 const svgData = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256" width="80px" height="80px" fill-rule="nonzero"><g fill="${config.invertColors ? '#000000' : '#ffffff'}" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(3.2,3.2)"><path d="M9,11c-2.19922,0 -4,1.80078 -4,4v51h0.00781c0.00781,1.60156 1.32422,3 2.99219,3h58.87109c1.70703,0 3.19531,-1.21094 3.53906,-2.88672l6.16797,-29.97266c0.33203,-1.60156 -0.92187,-3.14062 -2.55859,-3.14062h-4.01953v-12c0,-2.19922 -1.80078,-4 -4,-4h-37.83203l-0.96484,-2.30859c-0.92969,-2.23047 -3.11719,-3.69141 -5.53516,-3.69141zM9,13h12.66797c1.61719,0 3.07031,0.96875 3.69141,2.46094l1.47266,3.53906h39.16797c1.11719,0 2,0.88281 2,2v12h-53.00781c-1.89453,0 -3.53516,1.33984 -3.91797,3.19141l-4.07422,19.79297v-40.98437c0,-1.11719 0.88281,-2 2,-2zM14.99219,35h53.00781c0,0.55078 0.44922,1 1,1c0.55078,0 1,-0.44922 1,-1h4.01953c0.41016,0 0.68359,0.33594 0.60156,0.73828l-4.70312,22.85938c-0.16016,-0.36328 -0.51953,-0.59766 -0.91797,-0.59766c-0.55078,0 -1,0.44922 -1,1c0,0.55078 0.44922,1 1,1c0.25391,0 0.5,-0.09766 0.68359,-0.26953l-0.47266,2.29297c-0.07031,-0.01562 -0.14062,-0.02344 -0.21094,-0.02344c-0.55078,0 -1,0.44922 -1,1c0,0.47656 0.33984,0.89063 0.80859,0.98047l-0.35547,1.73438c-0.15625,0.75391 -0.8125,1.28516 -1.58203,1.28516h-58.87109c-0.65234,0 -1.10937,-0.5625 -0.97656,-1.20312l6.00781,-29.20312c0.19531,-0.93359 1.00391,-1.59375 1.96094,-1.59375z"></path></g></g></svg>`;
-                
-                const img = new Image();
-                img.onload = () => {
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                };
-                img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
-
-                // Create mesh with SVG texture
+        
+                // Create geometry and material first
                 const geometry = new THREE.PlaneGeometry(6, 6);
-                const texture = new THREE.CanvasTexture(canvas);
-                texture.needsUpdate = true;
                 const material = new THREE.MeshBasicMaterial({
-                    map: texture,
                     transparent: true,
                     opacity: 1
                 });
 
+                // Create mesh with placeholder material
                 this.mesh = new THREE.Mesh(geometry, material);
                 this.mesh.position.copy(position);
                 this.mesh.position.z = 0;
@@ -1195,6 +1208,17 @@
                 this.consumptionPause = 0;
                 this.pulseTime = 0;
                 scene.add(this.mesh);
+
+                // Load image and update texture
+                const img = new Image();
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const texture = new THREE.CanvasTexture(canvas);
+                    texture.needsUpdate = true;
+                    this.mesh.material.map = texture;
+                    this.mesh.material.needsUpdate = true;
+                };
+                img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
             }
 
             update(flies) {
@@ -1239,6 +1263,7 @@
                     this.consumed += rate;
 
                     if (this.consumed >= 1) {
+                        updateFoodCounter(); // Update counter when food is fully consumed
                         return false;
                     }
 
@@ -1267,8 +1292,19 @@
 
             dispose() {
                 scene.remove(this.mesh);
-                this.mesh.geometry.dispose();
-                this.mesh.material.dispose();
+                foodsConsumed++;
+                
+                // Check for new flies spawn
+                if (foodsConsumed % foodsPerSpawn === 0) {
+                    addNewFlies(fliesPerSpawn);
+                }
+                
+                // Check for level up
+                if (foodsConsumed % foodsPerLevel === 0) {
+                    levelUp();
+                }
+                
+                updateProgress();
             }
 
             getPosition() {
@@ -1287,6 +1323,130 @@
                 const scale = this.originalScale * (1 - this.consumed * 0.7);
                 this.mesh.scale.set(scale, scale, 1);
                 this.mesh.material.opacity = 1 - this.consumed * 0.7;
+            }
+        }
+
+        // Game state
+        let currentLevel = 1;
+        let foodsConsumed = 0;
+        const MAX_LEVEL = 40;
+        let foodsPerLevel = 30;
+        let foodsPerSpawn = 10;
+        const fliesPerSpawn = 5;
+        let consumptionRadius = 30;
+        let maxFood = 10;
+
+        // Calculate foods needed for next level based on current level
+        function calculateFoodsNeeded() {
+            return Math.floor(foodsPerLevel * (1 + (currentLevel * 0.15))); // Increases by 15% per level
+        }
+
+        // Calculate consumption radius based on level
+        function calculateConsumptionRadius() {
+            // Starts at 30, decreases by 0.5 each level, minimum 10
+            return Math.max(30 - (currentLevel * 0.5), 10);
+        }
+
+        // Update difficulty based on level
+        function updateDifficulty() {
+            consumptionRadius = calculateConsumptionRadius();
+            foodsPerLevel = calculateFoodsNeeded();
+            
+            // After level 10, increase max food to 15
+            if (currentLevel > 10) {
+                maxFood = 15;
+                // Update food counter display to show new maximum
+                updateFoodCounter();
+            }
+
+            // Increase fly speed with level
+            const speedMultiplier = 1 + (currentLevel * 0.05); // 5% faster per level
+            flies.forEach(fly => {
+                fly.maxSpeed *= speedMultiplier;
+            });
+        }
+
+        // Level up function with visual effects
+        function levelUp() {
+            if (currentLevel < MAX_LEVEL) {
+                currentLevel++;
+                
+                // Add flash effect to level display
+                const levelDisplay = document.getElementById('level-display');
+                levelDisplay.classList.add('level-flash');
+                setTimeout(() => levelDisplay.classList.remove('level-flash'), 500);
+                levelDisplay.textContent = `Level ${currentLevel}`;
+
+                // Add completion effect to progress bar
+                const progressBar = document.getElementById('progress-bar');
+                progressBar.classList.add('bar-complete');
+                setTimeout(() => progressBar.classList.remove('bar-complete'), 500);
+
+                // Update game difficulty
+                updateDifficulty();
+            }
+        }
+
+        // Update progress bar with current level requirements
+        function updateProgress() {
+            const foodsNeeded = calculateFoodsNeeded();
+            const progress = ((foodsConsumed % foodsNeeded) / foodsNeeded) * 100;
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `${Math.floor(progress)}%`;
+        }
+
+        // Modified food consumption check
+        function checkFoodConsumption() {
+            foodItems.forEach((food, index) => {
+                const foodPos = food.getPosition();
+                const distance = mousePosition.distanceTo(foodPos);
+                
+                if (distance < consumptionRadius) {  // Use dynamic consumption radius
+                    consumeFood(food, index);
+                }
+            });
+        }
+
+        // Modified consumeFood function
+        function consumeFood(food, index) {
+            food.dispose();
+            foodItems.splice(index, 1);
+            foodsConsumed++;
+            
+            // Check for new flies spawn
+            if (foodsConsumed % foodsPerSpawn === 0) {
+                addNewFlies(fliesPerSpawn);
+            }
+            
+            // Check for level up using new foodsNeeded calculation
+            if (foodsConsumed % calculateFoodsNeeded() === 0) {
+                levelUp();
+            }
+            
+            updateProgress();
+            updateFoodCounter();
+        }
+
+        // Modified addNewFlies function with level-based speed
+        function addNewFlies(count) {
+            const speedMultiplier = 1 + (currentLevel * 0.05); // 5% faster per level
+            for (let i = 0; i < count; i++) {
+                const fly = new Fly();
+                fly.maxSpeed *= speedMultiplier;
+                fly.sprite.position.set(
+                    (Math.random() - 0.5) * window.innerWidth,
+                    (Math.random() - 0.5) * window.innerHeight,
+                    0
+                );
+                fly.velocity.set(
+                    (Math.random() - 0.5) * 2,
+                    (Math.random() - 0.5) * 2,
+                    (Math.random() - 0.5) * 2
+                );
+                flies.push(fly);
+                scene.add(fly.sprite);
             }
         }
 
@@ -1344,7 +1504,7 @@
             }
 
             // Only create food if we have less than the maximum
-            if (foodItems.length < MAX_FOOD_ITEMS) {
+            if (foodItems.length < maxFood) {
                 const rect = renderer.domElement.getBoundingClientRect();
                 const x = ((pos.clientX - rect.left) / rect.width) * 2 - 1;
                 const y = -((pos.clientY - rect.top) / rect.height) * 2 + 1;
@@ -1357,6 +1517,7 @@
 
                 const food = new Food(position);
                 foodItems.push(food);
+                updateFoodCounter(); // Update counter after adding food
             }
         }
 
@@ -1468,11 +1629,11 @@
                 if (!config.paused) {
                     // Pause the animation
                     config.paused = true;
-                    document.getElementById('pauseText').style.display = 'block';
+                    document.getElementById('pauseIcon').style.display = 'block';
                 } else {
                     // Resume the animation
                     config.paused = false;
-                    document.getElementById('pauseText').style.display = 'none';
+                    document.getElementById('pauseIcon').style.display = 'none';
                 }
             } else if (event.key.toLowerCase() === 'r') {
                 // Reset all flies
@@ -1495,13 +1656,52 @@
                 isKillingFlies = false;
                 config.killed = false;
                 config.paused = false;
-                document.getElementById('pauseText').style.display = 'none';
+                document.getElementById('pauseIcon').style.display = 'none';
                 dyingFlies.clear();
+
+                // Clear all food items
+                foodItems.forEach(food => food.dispose());
+                foodItems.length = 0;
+                updateFoodCounter();
+
+                // Reset level system
+                currentLevel = 1;
+                foodsConsumed = 0;
+                document.getElementById('level-display').textContent = 'Level 1';
+                updateProgress();
 
                 // Update GUI
                 for (let i in gui.__controllers) {
                     gui.__controllers[i].updateDisplay();
                 }
+            }
+        });
+
+        // Add touch support for social links
+        const addTouchSupport = (elementId) => {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    const href = element.getAttribute('href');
+                    window.open(href, '_blank');
+                });
+            }
+        };
+
+        // Add touch support for social buttons
+        addTouchSupport('github-link');
+        addTouchSupport('instagram-link');
+
+        // Handle GUI open/close events for both click and touch
+        gui.domElement.addEventListener('click', (e) => {
+            if (e.target.classList.contains('close-button')) {
+                e.preventDefault(); // Prevent double-firing on touch devices
+            }
+        });
+        gui.domElement.addEventListener('touchstart', (e) => {
+            if (e.target.classList.contains('close-button')) {
+                e.preventDefault(); // Prevent double-firing on touch devices
             }
         });
     </script>
